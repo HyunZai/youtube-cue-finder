@@ -1,0 +1,20 @@
+{
+  "name": "youtube-cue",
+  "version": "1.0.0",
+  "description": "Find YouTube videos with words(cue)",
+  "homepage": "https://github.com/HyunZai/youtube-cue#readme",
+  "bugs": {
+    "url": "https://github.com/HyunZai/youtube-cue/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HyunZai/youtube-cue.git"
+  },
+  "license": "ISC",
+  "author": "Zai",
+  "type": "commonjs",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
