@@ -1,67 +1,119 @@
 # YouTube Cue
-Find YouTube videos with words (cue)
 
-YouTube 채널에서 특정 단어나 구문이 포함된 영상을 검색할 수 있는 웹 애플리케이션입니다.
+YouTube 채널의 모든 영상에서 특정 단어나 구문이 포함된 지점을 찾아주는 웹 애플리케이션입니다.
 
-## 🚀 빠른 시작
+## 🌟 핵심 기능
+- **채널 검색**: URL 또는 채널명으로 원하는 YouTube 채널을 쉽게 찾을 수 있습니다.
+- **영상 필터링**: 채널의 모든 영상을 대상으로 특정 검색어가 포함된 영상만 필터링합니다.
+- **타임스탬프 제공**: 검색어가 등장하는 모든 지점의 타임스탬프를 클릭 가능한 링크로 제공하여 바로 해당 장면으로 이동할 수 있습니다.
 
-### 선택적 서비스 시작
-```bash
-# 모든 서비스 시작
-./start.sh all
+## 🏗️ 아키텍처
+```mermaid
+graph TD;
+    subgraph "User's Browser"
+        A[React Client <br/> localhost:5173]
+    end
 
-# 개별 서비스 시작
-./start.sh react          # React 클라이언트만
-./start.sh node           # Node.js 서버만
-./start.sh python         # Python API만
+    subgraph "Backend Services"
+        B[Node.js Server <br/> localhost:3001]
+        C[Python API <br/> localhost:5001]
+    end
+    
+    subgraph "External APIs"
+        D[YouTube Data API]
+        E[YouTube Transcript API]
+    end
 
-# 조합 시작
-./start.sh react node     # React + Node.js
-./start.sh react python   # React + Python API
-./start.sh node python    # Node.js + Python API
+    A -- "채널/영상 검색 요청" --> B;
+    A -- "자막 검색 요청" --> C;
+    B -- "채널/영상 정보 조회" --> D;
+    C -- "자막 데이터 요청" --> E;
+    
+    B -- "검색 결과" --> A;
+    C -- "자막 검색 결과" --> A;
+
+    style A fill:#61DAFB,stroke:#000,stroke-width:2px
+    style B fill:#8CC84B,stroke:#000,stroke-width:2px
+    style C fill:#3776AB,stroke:#000,stroke-width:2px
+    style D fill:#FF0000,stroke:#000,stroke-width:2px
+    style E fill:#FF0000,stroke:#000,stroke-width:2px
 ```
 
-## 🔧 환경 설정
+## 🛠️ 설치 및 실행
 
-### Python 환경
-- Python 3.11+ 필요
-- 가상환경 사용 권장: `python3 -m venv venv`
-- 필요한 패키지: `pip install flask youtube-transcript-api`
+### 1. 사전 요구사항
+- **Node.js**: v18 이상
+- **Python**: v3.11 이상
 
-### Node.js 환경
-- Node.js 18+ 필요
-- 서버: `npm install`
-- 클라이언트: `npm install`
+### 2. 프로젝트 클론
+```bash
+git clone https://github.com/your-username/youtube-cue.git
+cd youtube-cue
+```
 
-## 📡 API 엔드포인트
+### 3. 환경 변수 설정 (매우 중요)
+Node.js 서버가 YouTube Data API를 사용하기 위해서는 API 키가 필요합니다.
 
-- **Python API**: http://localhost:5001
-  - `GET /transcript/{video_id}`: 비디오 트랜스크립트 조회
-  - `GET /health`: 헬스 체크
+1.  [Google Cloud Console](https://console.cloud.google.com/apis/credentials)에서 YouTube Data API v3 사용 설정을 하고 API 키를 발급받으세요.
+2.  `server` 디렉터리에 `.env` 파일을 생성합니다.
+    ```bash
+    touch server/.env
+    ```
+3.  생성한 `.env` 파일에 발급받은 API 키를 다음과 같이 추가합니다.
+    ```
+    YOUTUBE_API_KEY=여기에_발급받은_API_키를_입력하세요
+    ```
 
-- **Node.js Server**: http://localhost:3000
-  - `POST /api/channel-search`: 채널 검색
-  - `POST /api/video-search`: 비디오 검색
+### 4. 서비스 종속성 설치
+각 서비스 디렉터리에서 필요한 패키지를 설치합니다.
 
-- **React Client**: http://localhost:5173
+```bash
+# Node.js 서버 종속성 설치
+cd server && npm install && cd ..
+
+# React 클라이언트 종속성 설치
+cd client && npm install && cd ..
+
+# Python 가상환경 설정 및 패키지 설치
+cd python-api
+python3 -m venv venv
+source venv/bin/activate
+pip install flask youtube-transcript-api flask-cors
+cd ..
+```
+
+### 5. 서비스 시작
+프로젝트 루트 디렉터리에서 `start.sh` 스크립트를 사용하여 모든 서비스 또는 원하는 서비스만 선택적으로 실행할 수 있습니다.
+
+```bash
+# 모든 서비스 시작 (클라이언트, Node 서버, Python API)
+./start.sh all
+
+# React 클라이언트만 시작
+./start.sh react
+
+# Node.js 서버와 Python API만 시작
+./start.sh node python
+```
+
+## 📡 API 엔드포인트 및 상태 확인
+
+- **React Client**: `http://localhost:5173`
+- **Node.js Server**: `http://localhost:3001`
+  - `GET /api/health`: 서버 상태 및 YouTube API 키 유효성 검사. **(가장 먼저 확인해보세요!)**
+  - `GET /api/channel-search`: 채널 검색 (URL 또는 이름)
+  - `GET /api/channel-videos`: 채널의 모든 영상 목록 조회
+  - `GET /api/check-transcript`: 자막 내 검색어 확인
+- **Python API**: `http://localhost:5001`
+  - `GET /health`: Python API 서버 동작 상태 확인
+  - `POST /search`: 영상 목록을 받아 자막에서 검색어를 찾고 결과 반환
 
 ## 🐛 문제 해결
 
-### Python 명령어 인식 안됨
-macOS에서 `python` 명령어가 인식되지 않는 경우:
+### Python 명령어 인식
+macOS에서 `python` 대신 `python3`를 사용해야 할 수 있습니다. 영구적으로 `python`을 `python3`로 사용하려면:
 ```bash
-# 현재 세션에서 해결
-alias python=python3
-
-# 영구 해결 (zsh 사용자)
+# zsh 사용자의 경우
 echo 'alias python=python3' >> ~/.zshrc
 source ~/.zshrc
-```
-
-### 가상환경 활성화 필요
-Python API 실행 시 반드시 가상환경을 활성화해야 합니다:
-```bash
-cd python-api
-source venv/bin/activate
-python app.py
 ```
