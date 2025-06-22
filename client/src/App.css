@@ -304,7 +304,7 @@
 }
 
 .continue-search-button {
-  background: #96c9ff;
+  background: #7bb8ff;
   color: white;
   border: none;
   border-radius: 8px;
@@ -316,10 +316,20 @@
 }
 
 .continue-search-button:hover {
-  background: #7bb8ff;
+  background: #96c9ff;
 }
 
 .continue-search-button:disabled {
   background: #ccc;
   cursor: not-allowed;
+}
+
+.search-completed {
+  text-align: center;
+  margin-top: 20px;
+  padding: 16px;
+  background: #e8f5e8;
+  border-radius: 8px;
+  color: #2e7d32;
+  font-weight: 500;
 }

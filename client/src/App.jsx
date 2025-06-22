@@ -104,6 +104,13 @@ function App() {
       setNextPageToken(newNextPageToken);
       setHasMoreVideos(!!newNextPageToken);
       
+      console.log('🔍 검색 상태:', {
+        isContinueSearch,
+        hasMoreVideos: !!newNextPageToken,
+        nextPageToken: newNextPageToken,
+        videosCount: allVideos.length
+      });
+      
       // 각 영상별로 자막 검색을 개별적으로 수행
       for (let i = 0; i < allVideos.length; i++) {
         const video = allVideos[i];
@@ -117,7 +124,8 @@ function App() {
           const transcriptRes = await axios.get(`/api/check-transcript`, {
             params: {
               videoId: video.videoId,
-              query: cueWord
+              query: cueWord,
+              order: i + 1  // 1부터 시작하는 순번 추가
             }
           });
           
@@ -145,21 +153,37 @@ function App() {
         } catch {
           // 자막을 가져올 수 없는 경우 무시하고 계속 진행
         }
-        
-        // 마지막 영상까지 검색이 완료되었는지 확인
-        if (i === allVideos.length - 1) {
-          setCurrentBatchCompleted(true);
-        }
       }
+      
+      // 현재 배치의 모든 영상 검색이 완료됨
+      setCurrentBatchCompleted(true);
+      
+      console.log('✅ 검색 완료 상태:', {
+        isContinueSearch,
+        hasMoreVideos: !!newNextPageToken,
+        currentBatchCompleted: true
+      });
+      
+      // 검색 완료 처리
+      if (!newNextPageToken) {
+        // 더 이상 검색할 영상이 없으면 검색 완료
+        console.log('🏁 모든 검색 완료 - isSearching 해제');
+        setIsSearching(false);
+        setCurrentSearchChannelId(null);
+        setHasMoreVideos(false);
+      } else {
+        // 다음 배치가 있으면 검색 중단 (사용자가 계속 검색하기 버튼을 눌러야 함)
+        console.log('⏸️ 배치 검색 완료 - isSearching 해제, 계속 검색 대기');
+        setIsSearching(false);
+        setCurrentSearchChannelId(null);
+        // hasMoreVideos는 true로 유지 (다음 배치가 있음을 표시)
+      }
+      
     } catch (error) {
       console.error('영상 검색 중 오류가 발생했습니다:', error);
       alert('영상 검색 중 오류가 발생했습니다.');
-    } finally {
-      // 검색 완료 시 로딩 상태 해제 (채널이 변경되지 않은 경우에만)
-      if (currentSearchChannelId === channelInfo.id) {
-        setIsSearching(false);
-        setCurrentSearchChannelId(null);
-      }
+      setIsSearching(false);
+      setCurrentSearchChannelId(null);
     }
   };
 
@@ -321,6 +345,18 @@ function App() {
               >
                 계속 검색하기
               </button>
+            </div>
+          )}
+          
+          {!isSearching && !hasMoreVideos && searchedVideos.length > 0 && (
+            <div className="search-completed">
+              <p>모든 영상 검색이 완료되었습니다.</p>
+            </div>
+          )}
+          
+          {!isSearching && !hasMoreVideos && searchedVideos.length === 0 && (
+            <div className="search-completed">
+              <p>검색할 영상이 없습니다.</p>
             </div>
           )}
         </div>

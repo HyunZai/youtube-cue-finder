@@ -13,6 +13,56 @@ app.get('/', (req, res) => {
   res.send('Hello from Node.js server!');
 });
 
+// API 키 상태 확인
+app.get('/api/health', async (req, res) => {
+  const apiKey = process.env.YOUTUBE_API_KEY;
+  
+  if (!apiKey) {
+    return res.status(500).json({ 
+      status: 'error', 
+      message: 'YouTube API 키가 설정되어 있지 않습니다.',
+      apiKeyExists: false 
+    });
+  }
+  
+  try {
+    // 간단한 API 호출로 키 유효성 테스트
+    const testRes = await axios.get('https://www.googleapis.com/youtube/v3/search', {
+      params: {
+        part: 'snippet',
+        q: 'test',
+        maxResults: 1,
+        key: apiKey,
+      },
+    });
+    
+    res.json({ 
+      status: 'healthy', 
+      message: 'YouTube API 키가 정상적으로 작동합니다.',
+      apiKeyExists: true,
+      quotaRemaining: testRes.headers['x-quota-remaining'] || 'unknown'
+    });
+  } catch (error) {
+    console.error('API 키 테스트 에러:', error.response?.status, error.response?.data);
+    
+    if (error.response?.status === 403) {
+      res.status(500).json({ 
+        status: 'error', 
+        message: 'YouTube API 키가 유효하지 않거나 할당량이 초과되었습니다.',
+        apiKeyExists: true,
+        error: error.response?.data?.error?.message || 'Forbidden'
+      });
+    } else {
+      res.status(500).json({ 
+        status: 'error', 
+        message: 'YouTube API 연결에 문제가 있습니다.',
+        apiKeyExists: true,
+        error: error.message
+      });
+    }
+  }
+});
+
 // 채널 정보를 일관된 형태로 매핑하는 헬퍼 함수
 const mapChannelInfo = (item, channelId = null) => ({
   id: channelId || item.snippet.channelId,
@@ -38,17 +88,34 @@ const getChannelById = async (channelId, apiKey) => {
 
 // 검색으로 채널 정보 조회
 const searchChannels = async (query, apiKey, maxResults = 1) => {
-  const apiUrl = 'https://www.googleapis.com/youtube/v3/search';
-  const apiRes = await axios.get(apiUrl, {
-    params: {
-      part: 'snippet',
-      q: query,
-      type: 'channel',
-      maxResults,
-      key: apiKey,
-    },
-  });
-  return apiRes.data.items || [];
+  try {
+    const apiUrl = 'https://www.googleapis.com/youtube/v3/search';
+    const apiRes = await axios.get(apiUrl, {
+      params: {
+        part: 'snippet',
+        q: query,
+        type: 'channel',
+        maxResults,
+        key: apiKey,
+      },
+    });
+    return apiRes.data.items || [];
+  } catch (error) {
+    console.error('YouTube API 검색 에러:', {
+      status: error.response?.status,
+      statusText: error.response?.statusText,
+      data: error.response?.data,
+      query: query
+    });
+    
+    if (error.response?.status === 403) {
+      throw new Error('YouTube API 키가 유효하지 않거나 할당량이 초과되었습니다. API 키를 확인해주세요.');
+    } else if (error.response?.status === 400) {
+      throw new Error('잘못된 검색 요청입니다. 검색어를 확인해주세요.');
+    } else {
+      throw new Error(`YouTube API 오류: ${error.response?.status || '알 수 없는 오류'}`);
+    }
+  }
 };
 
 // 채널의 모든 영상 목록 가져오기
@@ -145,7 +212,15 @@ app.get('/api/channel-search', async (req, res) => {
       res.json({ results });
     }
   } catch (err) {
-    res.status(500).json({ error: '채널 검색 중 오류가 발생했습니다.' });
+    console.error('채널 검색 에러:', err);
+    
+    if (err.message.includes('YouTube API 키')) {
+      res.status(500).json({ error: err.message });
+    } else if (err.response?.status === 403) {
+      res.status(500).json({ error: 'YouTube API 키가 유효하지 않거나 할당량이 초과되었습니다.' });
+    } else {
+      res.status(500).json({ error: '채널 검색 중 오류가 발생했습니다.' });
+    }
   }
 });
 
@@ -171,14 +246,14 @@ app.get('/api/channel-videos', async (req, res) => {
 
 // 개별 영상의 자막에서 검색어 확인
 app.get('/api/check-transcript', async (req, res) => {
-  const { videoId, query } = req.query;
+  const { videoId, query, order } = req.query;
   
   if (!videoId || !query) {
     return res.status(400).json({ error: 'videoId and query are required' });
   }
 
   try {
-    const transcriptRes = await axios.get(`http://localhost:5001/transcript/${videoId}`);
+    const transcriptRes = await axios.get(`http://localhost:5001/transcript/${videoId}?order=${order || 'unknown'}`);
     const transcriptText = transcriptRes.data.transcript || '';
     const matched = transcriptText.toLowerCase().includes(query.toLowerCase());
     
