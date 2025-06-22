@@ -311,7 +311,7 @@ function App() {
 
       {searchedVideos.length > 0 && (
         <div className="search-results-container">
-          <h3 className="search-results-title">단서 검색 결과 ({searchedVideos.length}개)</h3>
+          <h3 className="search-results-title">검색 결과 ({searchedVideos.length}개)</h3>
           <ul className="search-results-list">
             {searchedVideos.map((video) => (
               <li key={video.videoId} className="search-result-item">
