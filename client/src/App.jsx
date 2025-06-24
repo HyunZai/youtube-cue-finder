@@ -1,6 +1,11 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 import axios from 'axios'
+import ChannelSearch from './components/ChannelSearch'
+import SelectedChannel from './components/SelectedChannel'
+import CueWordSearch from './components/CueWordSearch'
+import SearchResults from './components/SearchResults'
+import LoadingSpinner from './components/LoadingSpinner'
 
 function App() {
   // State for channel input and type
@@ -211,155 +216,44 @@ function App() {
   return (
     <div className="app-container">
       <h1 className="app-title">유튜브 영상 찾기</h1>
-      
       {/* 1단계: 채널 선택 */}
       {!channelInfo ? (
-        <div className="channel-search-wrapper">
-          <h3>유튜브 채널명이나 채널 URL을 입력하세요.</h3>
-          <div style={{ marginBottom: 16 }}>
-            <div className="search-container">
-              <input
-                type="text"
-                value={channelInput}
-                onChange={e => setChannelInput(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && handleChannelSearch()}
-                placeholder="채널명 또는 https://youtube.com/@..."
-                className="search-input"
-              />
-              <button onClick={handleChannelSearch} className="search-button">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <path d="m21 21-4.35-4.35"></path>
-                </svg>
-              </button>
-            </div>
-          </div>
-          {/* 채널명으로 검색했을 때 결과 표시 */}
-          {searchMode === 'name' && channelSearchResults.length > 0 && (
-            <div className="channel-search-results">
-              <p>영상을 검색할 채널을 선택하세요.</p>
-              <ul className="channel-search-results-list">
-                {channelSearchResults.map((ch, idx) => (
-                  <li key={idx} className="channel-search-result-item" onClick={() => handleSelectChannel(ch)}>
-                    <img src={ch.thumbnail} alt="채널 썸네일" className="channel-search-result-thumbnail" />
-                    <div className="channel-search-result-info">
-                      <div className="channel-search-result-name">{ch.name}</div>
-                      <div className="channel-search-result-description">{ch.description}</div>
-                      <a href={ch.url} target="_blank" rel="noopener noreferrer" className="channel-search-result-link" onClick={e => e.stopPropagation()}>
-                        채널 바로가기
-                      </a>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
+        <ChannelSearch
+          channelInput={channelInput}
+          setChannelInput={setChannelInput}
+          handleChannelSearch={handleChannelSearch}
+          searchMode={searchMode}
+          channelSearchResults={channelSearchResults}
+          handleSelectChannel={handleSelectChannel}
+        />
       ) : (
-        // 채널이 선택된 후
-        <div className="selected-channel-wrapper">
-          <div className="selected-channel-header">
-            <h3 className="selected-channel-title">✅ 선택된 채널</h3>
-            <button onClick={handleResetChannel} className="change-channel-button">채널 변경</button>
-          </div>
-          <div className="channel-search-result-item selected">
-            <img src={channelInfo.thumbnail} alt="채널 썸네일" className="channel-search-result-thumbnail" />
-            <div className="channel-search-result-info">
-              <div className="channel-search-result-name">{channelInfo.name}</div>
-              <div className="channel-search-result-description">{channelInfo.description}</div>
-              <a href={channelInfo.url} target="_blank" rel="noopener noreferrer" className="channel-search-result-link" onClick={e => e.stopPropagation()}>
-                채널 바로가기
-              </a>
-            </div>
-          </div>
-        </div>
+        <SelectedChannel
+          channelInfo={channelInfo}
+          handleResetChannel={handleResetChannel}
+        />
       )}
-
       {/* 2단계: 단서로 검색 */}
-      <div className={`cue-word-search-wrapper ${!channelInfo ? 'disabled' : ''}`}>
-        <h3>찾고 싶은 영상에서 나왔던 말을 입력하세요.</h3>
-        <div className="search-container">
-          <input
-            type="text"
-            value={cueWord}
-            onChange={e => setCueWord(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && handleCueSearch()}
-            placeholder={channelInfo ? "예: 오늘도 화이팅" : "채널을 먼저 선택해주세요"}
-            className="search-input"
-            disabled={!channelInfo}
-          />
-          <button
-            onClick={() => handleCueSearch(false)}
-            className="search-button"
-            disabled={!channelInfo}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="11" cy="11" r="8"></circle>
-              <path d="m21 21-4.35-4.35"></path>
-            </svg>
-          </button>
-        </div>
-      </div>
-
+      <CueWordSearch
+        channelInfo={channelInfo}
+        cueWord={cueWord}
+        setCueWord={setCueWord}
+        handleCueSearch={handleCueSearch}
+      />
       {/* 검색 결과 */}
       {isSearching && searchedVideos.length === 0 && (
         <div className="loading-container">
-          <div className="loading-spinner"></div>
+          <LoadingSpinner />
           <div className="loading-text">영상을 검색하고 있습니다...</div>
         </div>
       )}
-
       {searchedVideos.length > 0 && (
-        <div className="search-results-container">
-          <h3 className="search-results-title">검색 결과 ({searchedVideos.length}개)</h3>
-          <ul className="search-results-list">
-            {searchedVideos.map((video) => (
-              <li key={video.videoId} className="search-result-item">
-                <a href={`https://www.youtube.com/watch?v=${video.videoId}`} target="_blank" rel="noopener noreferrer">
-                  <img src={video.thumbnail} alt={video.title} className="video-thumbnail" />
-                </a>
-                <div className="video-info">
-                  <a href={`https://www.youtube.com/watch?v=${video.videoId}`} target="_blank" rel="noopener noreferrer" className="video-title">
-                    <p>{video.title}</p>
-                  </a>
-                  <p className="video-date">
-                    {new Date(video.publishedAt).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ul>
-          
-          {isSearching && (
-            <div className="searching-more">
-              <span>계속 찾는 중...</span>
-              <div className="loading-spinner"></div>
-            </div>
-          )}
-          
-          {!isSearching && currentBatchCompleted && hasMoreVideos && (
-            <div className="continue-search">
-              <button 
-                onClick={() => handleCueSearch(true)}
-                className="continue-search-button"
-              >
-                계속 검색하기
-              </button>
-            </div>
-          )}
-          
-          {!isSearching && !hasMoreVideos && searchedVideos.length > 0 && (
-            <div className="search-completed">
-              <p>모든 영상 검색이 완료되었습니다.</p>
-            </div>
-          )}
-          
-          {!isSearching && !hasMoreVideos && searchedVideos.length === 0 && (
-            <div className="search-completed">
-              <p>검색할 영상이 없습니다.</p>
-            </div>
-          )}
-        </div>
+        <SearchResults
+          searchedVideos={searchedVideos}
+          isSearching={isSearching}
+          currentBatchCompleted={currentBatchCompleted}
+          hasMoreVideos={hasMoreVideos}
+          handleCueSearch={handleCueSearch}
+        />
       )}
     </div>
   );
