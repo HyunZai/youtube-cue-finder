@@ -51,7 +51,7 @@ git clone https://github.com/your-username/youtube-cue.git
 cd youtube-cue
 ```
 
-### 3. 환경 변수 설정 (매우 중요)
+### 3. 환경 변수 설정 (중요)
 Node.js 서버가 YouTube Data API를 사용하기 위해서는 API 키가 필요합니다.
 
 1.  [Google Cloud Console](https://console.cloud.google.com/apis/credentials)에서 YouTube Data API v3 사용 설정을 하고 API 키를 발급받으세요.
