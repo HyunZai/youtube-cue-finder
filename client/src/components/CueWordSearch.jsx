@@ -9,13 +9,18 @@ function CueWordSearch({ channelInfo, cueWord, setCueWord, handleCueSearch }) {
           type="text"
           value={cueWord}
           onChange={e => setCueWord(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && handleCueSearch()}
-          placeholder={channelInfo ? "예: 오늘도 화이팅" : "채널을 먼저 선택해주세요"}
+          onKeyDown={e => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              handleCueSearch();
+            }
+          }}
+          placeholder={channelInfo ? "예: 오늘은 먹방입니다" : "채널을 먼저 선택해주세요"}
           className="search-input"
           disabled={!channelInfo}
         />
         <button
-          onClick={() => handleCueSearch(false)}
+          onClick={() => handleCueSearch()}
           className="search-button"
           disabled={!channelInfo}
         >

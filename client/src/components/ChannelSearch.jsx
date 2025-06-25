@@ -10,8 +10,13 @@ function ChannelSearch({ channelInput, setChannelInput, handleChannelSearch, sea
             type="text"
             value={channelInput}
             onChange={e => setChannelInput(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && handleChannelSearch()}
-            placeholder="채널명 또는 https://youtube.com/@..."
+            onKeyDown={e => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                handleChannelSearch();
+              }
+            }}
+            placeholder="채널명 또는 https://youtube.com/@Channel_ID"
             className="search-input"
           />
           <button onClick={handleChannelSearch} className="search-button">

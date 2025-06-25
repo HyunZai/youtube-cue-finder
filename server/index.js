@@ -254,12 +254,49 @@ app.get('/api/check-transcript', async (req, res) => {
 
   try {
     const transcriptRes = await axios.get(`http://localhost:5001/transcript/${videoId}?order=${order || 'unknown'}`);
-    const transcriptText = transcriptRes.data.transcript || '';
-    const matched = transcriptText.toLowerCase().includes(query.toLowerCase());
-    
-    res.json({ matched });
+    const transcriptText = transcriptRes.data.transcript.replaceAll(" ", "") || '';
+    const matched = transcriptText.toLowerCase().includes(query.replaceAll(" ", "").toLowerCase());
+    const matchedTranscript = matched && transcriptRes.data.transcript;
+
+    let trimScript = null;
+    if (matched && matchedTranscript) {
+      const cleanedQuery = query.replaceAll(" ", "").toLowerCase();
+      const sentenceRegex = /[^.?!]*[.?!]/g;
+      const sentences = matchedTranscript.match(sentenceRegex) || [];
+
+      for (let sentence of sentences) {
+        const cleanedSentence = sentence.replaceAll(" ", "").toLowerCase();
+        if (cleanedSentence.includes(cleanedQuery)) {
+          trimScript = sentence.trim();
+          break;
+        }
+      }
+    }
+
+    // result가 너무 길면 query 기준으로 앞뒤 자르기
+    if (trimScript && trimScript.length > 50) {
+      const lowerResult = trimScript.toLowerCase();
+      const lowerQuery = query.toLowerCase();
+      const index = lowerResult.indexOf(lowerQuery);
+
+      if (index !== -1) {
+        const start = Math.max(0, index - 20);
+        const end = Math.min(trimScript.length, index + lowerQuery.length + 20);
+        let snippet = trimScript.substring(start, end).trim();
+
+        // 앞뒤 생략 표시 추가
+        if (start > 0) snippet = '...' + snippet;
+        if (end < trimScript.length) snippet = snippet + '...';
+
+        trimScript = snippet;
+      }
+    }
+
+    const markRegex = new RegExp(`(${query})`, 'gi');
+    trimScript = trimScript?.replace(markRegex, '<b style="color:	#A0FFF7;">$1</b>');
+
+    res.json({ matched, trimScript });
   } catch (error) {
-    // 자막을 가져올 수 없는 경우 매칭되지 않은 것으로 처리
     res.json({ matched: false });
   }
 });
