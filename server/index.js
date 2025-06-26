@@ -317,7 +317,7 @@ app.get('/api/check-transcript', async (req, res) => {
           const before = trimScript.slice(0, start);
           const match = trimScript.slice(start, end);
           const after = trimScript.slice(end);
-          trimScript = `${before}<b style="color:#A0FFF7;">${match}</b>${after}`;
+          trimScript = `${before}<b style="color:#423fff;">${match}</b>${after}`;
         }
       }
     }

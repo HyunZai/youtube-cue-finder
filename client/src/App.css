@@ -166,9 +166,12 @@
 
 /* App container styles */
 .app-container {
+  background-color: #1F2020;
   max-width: 800px;
-  margin: 0 auto;
+  margin: 100px auto;
   padding: 24px;
+  padding-top: 10px;
+  border-radius: 20px;
 }
 
 .app-title {
@@ -405,4 +408,181 @@
     padding: 12px 10px;
     box-sizing: border-box;
   }
+}
+
+.global-navbar {
+  width: 100%;
+  height: 56px;
+  background: #1E1E1E;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  box-shadow: 0 4px 16px 0 rgba(0,0,0,0.18), 0 1.5px 0 0 #222;
+  padding: 0 20px;
+}
+.global-navbar-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #fff;
+}
+.darkmode-toggle-btn {
+  border: none;
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.7rem;
+  cursor: pointer;
+  background: none;
+  margin-right: 30px;
+}
+
+.darkmode-toggle-btn:hover {
+  color: #656565;
+}
+
+.darkmode-toggle-btn:focus,
+.darkmode-toggle-btn:active,
+.darkmode-toggle-btn:focus-visible {
+  outline: none;
+  border: none;
+  box-shadow: none;
+}
+
+/* ===== Light Theme (밝은 테마) ===== */
+body.light, .light {
+  background: #f7faff;
+  color: #1a1a1a;
+}
+
+body.light .global-navbar, .light .global-navbar {
+  background: #ffffff;
+  color: #1976d2;
+  box-shadow: 0 4px 16px 0 rgba(30,40,60,0.08), 0 1.5px 0 0 #e3eaf5;
+}
+body.light .global-navbar-title, .light .global-navbar-title {
+  color: #1976d2;
+}
+body.light .darkmode-toggle-btn, .light .darkmode-toggle-btn {
+  color: #1976d2;
+  background: none;
+}
+body.light .darkmode-toggle-btn:hover, .light .darkmode-toggle-btn:hover {
+  color: #004ba0;
+}
+
+body.light .app-title, .light .app-title {
+  color: #1976d2;
+}
+body.light .app-container, .light .app-container {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 2px 16px 0 rgba(30,40,60,0.06);
+}
+
+body.light .search-input, .light .search-input {
+  background: #fff;
+  color: #222;
+  border: 1.5px solid #b6d0ff;
+}
+body.light .search-input:focus, .light .search-input:focus {
+  border-color: #1976d2;
+}
+body.light .search-button, .light .search-button {
+  background: none;
+  color: #1976d2;
+}
+body.light .search-button:disabled svg, .light .search-button:disabled svg {
+  stroke: #b6d0ff;
+}
+
+body.light .channel-search-result-item, .light .channel-search-result-item {
+  background: #f3f8ff;
+  border: 1.5px solid #e3eaf5;
+}
+body.light .channel-search-result-item.selected, .light .channel-search-result-item.selected {
+  border: 2px solid #1976d2;
+  background: #e3f2fd;
+}
+body.light .channel-search-result-item:hover, .light .channel-search-result-item:hover {
+  background: #e3f2fd;
+}
+body.light .channel-search-result-name, .light .channel-search-result-name {
+  color: black;
+}
+body.light .channel-search-result-description, .light .channel-search-result-description {
+  color: #444;
+}
+body.light .channel-search-result-link, .light .channel-search-result-link {
+  color: #1976d2;
+}
+
+/* body.light .change-channel-button, .light .change-channel-button {
+  background: #1976d2;
+  color: #fff;
+}
+body.light .change-channel-button:hover, .light .change-channel-button:hover {
+  background: #004ba0;
+} */
+
+body.light .search-results-title, .light .search-results-title {
+  border-bottom: 2px solid #e3eaf5;
+}
+body.light .search-result-item, .light .search-result-item {
+  border-bottom: 1px solid #e3eaf5;
+}
+body.light .video-title, .light .video-title {
+  color: black;
+}
+
+body.light .video-title:hover, .light .video-title:hover {
+  color: #1976d2;
+}
+
+body.light .video-date, .light .video-date {
+  color: #6d6d6d;
+}
+body.light .trim-script-snippet, .light .trim-script-snippet {
+  background: #e3f2fd;
+  border-left: 4px solid #1976d2;
+  color: #1976d2;
+}
+body.light .trim-script-icon, .light .trim-script-icon {
+  color: #1976d2;
+}
+body.light .trim-script-text, .light .trim-script-text {
+  color: #004ba0;
+}
+body.light .continue-search-button, .light .continue-search-button {
+  background: #1976d2;
+  color: #fff;
+}
+body.light .continue-search-button:hover, .light .continue-search-button:hover {
+  background: #004ba0;
+}
+body.light .continue-search-button:disabled, .light .continue-search-button:disabled {
+  background: #b6d0ff;
+  color: #fff;
+}
+body.light .search-completed, .light .search-completed {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+body.light .loading-spinner, .light .loading-spinner {
+  border: 3px solid #e3eaf5;
+  border-top: 3px solid #1976d2;
+}
+body.light .loading-text, .light .loading-text {
+  color: #1976d2;
+}
+body.light .searching-more, .light .searching-more {
+  color: #1976d2;
 }

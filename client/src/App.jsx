@@ -7,8 +7,13 @@ import CueWordSearch from './components/CueWordSearch'
 import SearchResults from './components/SearchResults'
 import LoadingSpinner from './components/LoadingSpinner'
 import Swal from 'sweetalert2'
+import DarkModeIcon from '@mui/icons-material/DarkMode'
+import LightModeIcon from '@mui/icons-material/LightMode'
+import { useContext } from 'react'
+import { AppContext } from './context/AppContext'
 
 function App() {
+  const { theme, setTheme } = useContext(AppContext)
   // State for channel input and type
   const [channelInput, setChannelInput] = useState('')
   const [channelInfo, setChannelInfo] = useState(null) // For channel info if found by URL
@@ -43,6 +48,12 @@ function App() {
     };
   }, [isSearching]); // 의존성 배열을 빈 배열로 변경
 
+  // 테마 변경 시 body class도 변경
+  useEffect(() => {
+    document.body.classList.remove('dark', 'light');
+    document.body.classList.add(theme);
+  }, [theme]);
+
   // 한글이 포함된 @핸들 URL인지 확인하는 함수
   const hasKoreanInHandle = (input) => {
     const handleMatch = input.match(/youtube\.com\/(?:@|user\/)([^/?]+)/u);
@@ -62,8 +73,8 @@ function App() {
         icon: 'question',
         title: '검색 불가',
         html: '채널 입력란에 URL 혹은 채널명을 입력해주세요.',
-        background: '#282828',
-        color: '#fff',
+        background: theme === "dark" ? '#282828' : '#fff',
+        color: theme === "dark" ? '#fff' : 'black',
       });
       return;
     }
@@ -73,8 +84,8 @@ function App() {
         icon: 'error',
         title: '검색 불가',
         html: '해당 URL은 검색이 불가합니다.<br>유튜브에서 제공하는 채널 공유를 통해 복사된 URL 혹은<br>채널명으로 검색해주세요.',
-        background: '#282828',
-        color: '#fff',
+        background: theme === "dark" ? '#282828' : '#fff',
+        color: theme === "dark" ? '#fff' : 'black',
       });
       return;
     }
@@ -97,8 +108,8 @@ function App() {
         icon: 'error',
         title: '채널 검색 오류',
         text: '채널 검색 중 오류가 발생했습니다.',
-        background: '#282828',
-        color: '#fff',
+        background: theme === "dark" ? '#282828' : '#fff',
+        color: theme === "dark" ? '#fff' : 'black',
       });
     }
   }
@@ -110,8 +121,8 @@ function App() {
         icon: 'question',
         title: '입력 필요',
         text: '채널과 검색어를 모두 입력해주세요.',
-        background: '#282828',
-        color: '#fff',
+        background: theme === "dark" ? '#282828' : '#fff',
+        color: theme === "dark" ? '#fff' : 'black',
       });
       return;
     }
@@ -201,8 +212,8 @@ function App() {
         icon: 'error',
         title: '검색 오류',
         text: '영상 검색 중 오류가 발생했습니다.',
-        background: '#282828',
-        color: '#fff',
+        background: theme === "dark" ? '#282828' : '#fff',
+        color: theme === "dark" ? '#fff' : 'black',
       });
       setIsSearching(false);
       setCurrentSearchChannelId(null);
@@ -226,8 +237,8 @@ function App() {
         showCancelButton: true,
         confirmButtonText: '네',
         cancelButtonText: '아니오',
-        background: '#282828',
-        color: '#fff',
+        background: theme === "dark" ? '#282828' : '#fff',
+        color: theme === "dark" ? '#fff' : 'black',
       });
       if (!result.isConfirmed) return;
       if (abortControllerRef.current) {
@@ -241,8 +252,8 @@ function App() {
         showCancelButton: true,
         confirmButtonText: '네',
         cancelButtonText: '아니오',
-        background: '#282828',
-        color: '#fff',
+        background: theme === "dark" ? '#282828' : '#fff',
+        color: theme === "dark" ? '#fff' : 'black',
       });
       if (!result.isConfirmed) return;
     }
@@ -258,49 +269,65 @@ function App() {
     setCurrentBatchCompleted(false);
   };
 
+  const handleToggleTheme = () => {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  };
+
   return (
-    <div className="app-container">
-      <h1 className="app-title">유튜브 영상 찾기</h1>
-      {/* 1단계: 채널 선택 */}
-      {!channelInfo ? (
-        <ChannelSearch
-          channelInput={channelInput}
-          setChannelInput={setChannelInput}
-          handleChannelSearch={handleChannelSearch}
-          searchMode={searchMode}
-          channelSearchResults={channelSearchResults}
-          handleSelectChannel={handleSelectChannel}
-        />
-      ) : (
-        <SelectedChannel
+    <>
+      <nav className="global-navbar">
+        <span className="global-navbar-title">YouTube Cue Finder</span>
+        <button
+          className="darkmode-toggle-btn"
+          onClick={handleToggleTheme}
+          aria-label="다크모드 토글"
+        >
+          {theme === 'dark' ? <DarkModeIcon /> : <LightModeIcon />}
+        </button>
+      </nav>
+      <div className="app-container">
+        <h1 className="app-title">유튜브 영상 찾기</h1>
+        {/* 1단계: 채널 선택 */}
+        {!channelInfo ? (
+          <ChannelSearch
+            channelInput={channelInput}
+            setChannelInput={setChannelInput}
+            handleChannelSearch={handleChannelSearch}
+            searchMode={searchMode}
+            channelSearchResults={channelSearchResults}
+            handleSelectChannel={handleSelectChannel}
+          />
+        ) : (
+          <SelectedChannel
+            channelInfo={channelInfo}
+            handleResetChannel={handleResetChannel}
+          />
+        )}
+        {/* 2단계: 단서로 검색 */}
+        <CueWordSearch
           channelInfo={channelInfo}
-          handleResetChannel={handleResetChannel}
-        />
-      )}
-      {/* 2단계: 단서로 검색 */}
-      <CueWordSearch
-        channelInfo={channelInfo}
-        cueWord={cueWord}
-        setCueWord={setCueWord}
-        handleCueSearch={handleCueSearch}
-      />
-      {/* 검색 결과 */}
-      {isSearching && searchedVideos.length === 0 && (
-        <div className="loading-container">
-          <LoadingSpinner />
-          <div className="loading-text">영상을 검색하고 있습니다...</div>
-        </div>
-      )}
-      {(searchedVideos.length > 0 || (!isSearching && currentBatchCompleted && hasMoreVideos)) && (
-        <SearchResults
-          searchedVideos={searchedVideos}
-          isSearching={isSearching}
-          currentBatchCompleted={currentBatchCompleted}
-          hasMoreVideos={hasMoreVideos}
+          cueWord={cueWord}
+          setCueWord={setCueWord}
           handleCueSearch={handleCueSearch}
         />
-      )}
-    </div>
+        {/* 검색 결과 */}
+        {isSearching && searchedVideos.length === 0 && (
+          <div className="loading-container">
+            <LoadingSpinner />
+            <div className="loading-text">영상을 검색하고 있습니다...</div>
+          </div>
+        )}
+        {(searchedVideos.length > 0 || (!isSearching && currentBatchCompleted && hasMoreVideos)) && (
+          <SearchResults
+            searchedVideos={searchedVideos}
+            isSearching={isSearching}
+            currentBatchCompleted={currentBatchCompleted}
+            hasMoreVideos={hasMoreVideos}
+            handleCueSearch={handleCueSearch}
+          />
+        )}
+      </div>
+    </>
   );
 }
 
