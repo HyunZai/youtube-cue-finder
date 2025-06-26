@@ -292,8 +292,35 @@ app.get('/api/check-transcript', async (req, res) => {
       }
     }
 
-    const markRegex = new RegExp(`(${query})`, 'gi');
-    trimScript = trimScript?.replace(markRegex, '<b style="color:	#A0FFF7;">$1</b>');
+    if (trimScript) {
+      const cleanedScript = trimScript.replaceAll(" ", "").toLowerCase();
+      const cleanedQuery = query.replaceAll(" ", "").toLowerCase();
+      const index = cleanedScript.indexOf(cleanedQuery);
+    
+      if (index !== -1) {
+        // 원래 trimScript에서 index에 해당하는 부분을 찾아 강조
+        // 매칭된 부분의 원본 문자열 범위를 계산
+        let count = 0;
+        let start = -1, end = -1;
+        for (let i = 0; i < trimScript.length; i++) {
+          if (trimScript[i] !== ' ') {
+            if (count === index) start = i;
+            if (count === index + cleanedQuery.length - 1) {
+              end = i + 1; // end는 exclusive
+              break;
+            }
+            count++;
+          }
+        }
+    
+        if (start !== -1 && end !== -1) {
+          const before = trimScript.slice(0, start);
+          const match = trimScript.slice(start, end);
+          const after = trimScript.slice(end);
+          trimScript = `${before}<b style="color:#A0FFF7;">${match}</b>${after}`;
+        }
+      }
+    }
 
     res.json({ matched, trimScript });
   } catch (error) {
