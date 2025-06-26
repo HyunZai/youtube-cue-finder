@@ -457,6 +457,137 @@
   box-shadow: none;
 }
 
+/* ===== Dark Theme (다크 테마) ===== */
+body.dark, .dark {
+  background: #181A1B;
+  color: #E3EAF3;
+}
+
+.dark .global-navbar {
+  background: #23272F;
+  color: #E3EAF3;
+  box-shadow: 0 4px 16px 0 rgba(30,40,60,0.18), 0 1.5px 0 0 #181A1B;
+}
+.dark .global-navbar-title {
+  color: #4FC3F7;
+}
+.dark .darkmode-toggle-btn {
+  color: #B0B8C1;
+  background: none;
+}
+.dark .darkmode-toggle-btn:hover {
+  color: #4FC3F7;
+}
+
+.dark .app-title {
+  color: #4FC3F7;
+}
+.dark .app-container {
+  background: #23272F;
+  border-radius: 20px;
+  box-shadow: 0 2px 16px 0 rgba(30,40,60,0.18);
+}
+
+.dark .search-input {
+  background: #232B36;
+  color: #E3EAF3;
+  border: 1.5px solid #2A3A4A;
+}
+.dark .search-input:focus {
+  border-color: #4FC3F7;
+}
+.dark .search-button {
+  background: none;
+  color: #4FC3F7;
+}
+.dark .search-button:disabled svg {
+  stroke: #3A4A5A;
+}
+
+.dark .channel-search-result-item {
+  background: #232B36;
+  border: 1.5px solid #232B36;
+}
+.dark .channel-search-result-item.selected {
+  border: 2px solid #4FC3F7;
+  background: #1F232B;
+}
+.dark .channel-search-result-item:hover {
+  background: #283040;
+}
+.dark .channel-search-result-name {
+  color: #E3EAF3;
+}
+.dark .channel-search-result-description {
+  color: #B0B8C1;
+}
+.dark .channel-search-result-link {
+  color: #4FC3F7;
+}
+
+.dark .change-channel-button {
+  background: #ff3333;
+  color: white;
+}
+.dark .change-channel-button:hover {
+  background: #e0e0e0;
+}
+
+.dark .search-results-title {
+  border-bottom: 2px solid #232B36;
+}
+.dark .search-result-item {
+  border-bottom: 1px solid #232B36;
+}
+.dark .video-title {
+  color: #E3EAF3;
+}
+.dark .video-title:hover {
+  color: #4FC3F7;
+}
+.dark .video-date {
+  color: #B0B8C1;
+}
+
+.dark .trim-script-snippet {
+  background: #1F232B;
+  border-left: 4px solid #4FC3F7;
+  color: #E3EAF3;
+}
+.dark .trim-script-icon {
+  color: #4FC3F7;
+}
+.dark .trim-script-text {
+  color: #90CAF9;
+}
+
+.dark .continue-search-button {
+  background: #232B36;
+  color: #4FC3F7;
+}
+.dark .continue-search-button:hover {
+  background: #283040;
+}
+.dark .continue-search-button:disabled {
+  background: #232B36;
+  color: #555;
+}
+
+.dark .search-completed {
+  background: #232B36;
+  color: #4FC3F7;
+}
+.dark .loading-spinner {
+  border: 3px solid #232B36;
+  border-top: 3px solid #4FC3F7;
+}
+.dark .loading-text {
+  color: #4FC3F7;
+}
+.dark .searching-more {
+  color: #4FC3F7;
+}
+
 /* ===== Light Theme (밝은 테마) ===== */
 body.light, .light {
   background: #f7faff;
