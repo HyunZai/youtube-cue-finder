@@ -273,6 +273,8 @@ function App() {
     setTheme(theme === 'dark' ? 'light' : 'dark');
   };
 
+  const isInitial = !channelInfo && searchedVideos.length === 0 && !isSearching;
+
   return (
     <>
       <nav className="global-navbar">
@@ -285,7 +287,7 @@ function App() {
           {theme === 'dark' ? <DarkModeIcon /> : <LightModeIcon />}
         </button>
       </nav>
-      <div className="app-container">
+      <div className={`app-container${isInitial ? ' center' : ''}`}>
         <h1 className="app-title">유튜브 영상 찾기</h1>
         {/* 1단계: 채널 선택 */}
         {!channelInfo ? (
