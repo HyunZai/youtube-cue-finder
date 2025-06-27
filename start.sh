@@ -104,7 +104,7 @@ if [ "$START_PYTHON" = true ]; then
     echo -e "${BLUE}📡 Python API 시작 중...${NC}"
     cd python-api
     source venv/bin/activate
-    python app.py &
+    python3 app.py &
     PYTHON_PID=$!
     cd ..
     echo -e "${GREEN}✅ Python API 시작됨 (PID: $PYTHON_PID)${NC}"

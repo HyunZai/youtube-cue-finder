@@ -469,8 +469,8 @@ body.dark, .dark {
 }
 
 .dark .channel-search-result-item {
-  background: #232B36;
-  border: 1.5px solid #232B36;
+  background: #282828;
+  border: 1.5px solid #494949;
 }
 .dark .channel-search-result-item.selected {
   border: 2px solid #ff5252;
