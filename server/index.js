@@ -317,14 +317,29 @@ app.get('/api/check-transcript', async (req, res) => {
           const before = trimScript.slice(0, start);
           const match = trimScript.slice(start, end);
           const after = trimScript.slice(end);
-          trimScript = `${before}<b style="color:#423fff;">${match}</b>${after}`;
+          trimScript = `${before}<b style="color:#ff2121;">${match}</b>${after}`;
         }
       }
     }
 
     res.json({ matched, trimScript });
   } catch (error) {
-    res.json({ matched: false });
+    console.error('자막 검색 에러:', error);
+    
+    // 에러 타입에 따라 다른 응답
+    if (error.response?.status === 404) {
+      // 자막이 없는 경우
+      res.json({ matched: false, error: '자막을 찾을 수 없습니다.' });
+    } else if (error.code === 'ECONNREFUSED') {
+      // Python API 서버가 실행되지 않은 경우
+      res.status(500).json({ error: '자막 서버에 연결할 수 없습니다.' });
+    } else if (error.response?.status >= 500) {
+      // 서버 에러
+      res.status(500).json({ error: '자막 서버에서 오류가 발생했습니다.' });
+    } else {
+      // 기타 에러
+      res.status(500).json({ error: '자막 검색 중 오류가 발생했습니다.' });
+    }
   }
 });
 

@@ -10,7 +10,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "python-api": "cd ../python-api && source venv/bin/activate && python app.py"
+    "python-api": "cd ../python-api && source venv/bin/activate && python app.py",
+    "debug": "node --inspect=9229 index.js"
   },
   "dependencies": {
     "cors": "^2.8.5",

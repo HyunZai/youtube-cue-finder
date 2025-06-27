@@ -58,7 +58,7 @@
 }
 
 .channel-search-result-item:hover {
-  background: #96c9ff;
+  background: #ff8a80;
 }
 
 .channel-search-result-thumbnail {
@@ -87,7 +87,7 @@
 }
 
 .channel-search-result-link {
-  color: #1976d2;
+  color: blue;
   font-size: 13px;
   margin-top: 4px;
   text-decoration: none;
@@ -95,6 +95,7 @@
 
 .channel-search-result-link:hover {
   text-decoration: underline;
+  color: blue;
 }
 
 .channel-search-results-footer {
@@ -118,9 +119,9 @@
 }
 
 .channel-search-result-item.selected {
-  border: 2px solid #1976d2;
+  border: 2px solid #e53935;
   cursor: default;
-  background: #e9f5ff;
+  background: #ffebee;
 }
 
 .search-button:disabled svg {
@@ -129,7 +130,7 @@
 
 /* App container styles */
 .app-container {
-  background-color: #1F2020;
+  background-color: #1E1E1E;
   max-width: 800px;
   margin: 100px auto;
   padding: 24px;
@@ -139,7 +140,7 @@
 
 .app-title {
   text-align: center;
-  color: #96c9ff;
+  color: #e53935;
 }
 
 /* Channel search wrapper styles */
@@ -271,7 +272,7 @@
 }
 
 .continue-search-button {
-  background: #7bb8ff;
+  background: #e53935;
   color: white;
   border: none;
   border-radius: 8px;
@@ -283,12 +284,12 @@
 }
 
 .continue-search-button:hover {
-  background: #96c9ff;
+  background: #b71c1c;
 }
 
 .continue-search-button:disabled {
-  background: #ccc;
-  cursor: not-allowed;
+  background: #ff8a80;
+  color: #fff;
 }
 
 .search-completed {
@@ -303,26 +304,26 @@
 
 .trim-script-snippet {
   margin-top: 10px;
-  background: #232b36;
-  border-left: 4px solid #4fc3f7;
+  background: #fff5f5;
+  border-left: 4px solid #e53935;
   padding: 10px 16px;
   border-radius: 6px;
   display: flex;
   align-items: flex-start;
   gap: 8px;
   font-size: 15px;
-  color: #e3f2fd;
+  color: #b71c1c;
   box-shadow: 0 2px 8px 0 rgba(30,40,60,0.10);
 }
 .trim-script-icon {
   font-size: 18px;
   margin-right: 4px;
   flex-shrink: 0;
-  color: #4fc3f7;
+  color: #e53935;
 }
 .trim-script-text {
   font-style: italic;
-  color: #90caf9;
+  color: #ff1744;
   word-break: break-word;
 }
 
@@ -427,44 +428,44 @@ body.dark, .dark {
 }
 
 .dark .global-navbar {
-  background: #23272F;
-  color: #E3EAF3;
+  background: #232323;
+  color: #fff;
   box-shadow: 0 4px 16px 0 rgba(30,40,60,0.18), 0 1.5px 0 0 #181A1B;
 }
 .dark .global-navbar-title {
-  color: #4FC3F7;
+  color: #ff5252;
 }
 .dark .darkmode-toggle-btn {
-  color: #B0B8C1;
+  color: #ff5252;
   background: none;
 }
 .dark .darkmode-toggle-btn:hover {
-  color: #4FC3F7;
+  color: #ff1744;
 }
 
 .dark .app-title {
-  color: #4FC3F7;
+  color: #ff5252;
 }
 .dark .app-container {
-  background: #23272F;
+  background: #1E1E1E;
   border-radius: 20px;
   box-shadow: 0 2px 16px 0 rgba(30,40,60,0.18);
 }
 
 .dark .search-input {
-  background: #232B36;
+  background: #3C3C3C;
   color: #E3EAF3;
-  border: 1.5px solid #2A3A4A;
+  border: 1.5px solid #a7a7a7;
 }
 .dark .search-input:focus {
-  border-color: #4FC3F7;
+  border-color: #ff5252;
 }
 .dark .search-button {
   background: none;
-  color: #4FC3F7;
+  color: #ff5252;
 }
 .dark .search-button:disabled svg {
-  stroke: #3A4A5A;
+  stroke: #b71c1c;
 }
 
 .dark .channel-search-result-item {
@@ -472,11 +473,11 @@ body.dark, .dark {
   border: 1.5px solid #232B36;
 }
 .dark .channel-search-result-item.selected {
-  border: 2px solid #4FC3F7;
-  background: #1F232B;
+  border: 2px solid #ff5252;
+  background: #2d2323;
 }
 .dark .channel-search-result-item:hover {
-  background: #283040;
+  background: #3d2323;
 }
 .dark .channel-search-result-name {
   color: #E3EAF3;
@@ -485,15 +486,16 @@ body.dark, .dark {
   color: #B0B8C1;
 }
 .dark .channel-search-result-link {
-  color: #4FC3F7;
+  color: #5457ff;
 }
 
 .dark .change-channel-button {
-  background: #ff3333;
+  background: #e53935;
   color: white;
 }
 .dark .change-channel-button:hover {
-  background: #e0e0e0;
+  background: #ff8a80;
+  color: #b71c1c;
 }
 
 .dark .search-results-title {
@@ -506,49 +508,49 @@ body.dark, .dark {
   color: #E3EAF3;
 }
 .dark .video-title:hover {
-  color: #4FC3F7;
+  color: #ff5252;
 }
 .dark .video-date {
   color: #B0B8C1;
 }
 
 .dark .trim-script-snippet {
-  background: #1F232B;
-  border-left: 4px solid #4FC3F7;
-  color: #E3EAF3;
+  background: #2d2323;
+  border-left: 4px solid #ff5252;
+  color: #fff;
 }
 .dark .trim-script-icon {
-  color: #4FC3F7;
+  color: #ff5252;
 }
 .dark .trim-script-text {
-  color: #90CAF9;
+  color: #ff8a80;
 }
 
 .dark .continue-search-button {
-  background: #232B36;
-  color: #4FC3F7;
+  background: #b71c1c;
+  color: #fff;
 }
 .dark .continue-search-button:hover {
-  background: #283040;
+  background: #ff1744;
 }
 .dark .continue-search-button:disabled {
-  background: #232B36;
+  background: #3d2323;
   color: #555;
 }
 
 .dark .search-completed {
-  background: #232B36;
-  color: #4FC3F7;
+  background: #2d2323;
+  color: #ff5252;
 }
 .dark .loading-spinner {
-  border: 3px solid #232B36;
-  border-top: 3px solid #4FC3F7;
+  border: 3px solid #2d2323;
+  border-top: 3px solid #ff5252;
 }
 .dark .loading-text {
-  color: #4FC3F7;
+  color: #ff5252;
 }
 .dark .searching-more {
-  color: #4FC3F7;
+  color: #ff5252;
 }
 
 /* ===== Light Theme (밝은 테마) ===== */
@@ -559,22 +561,22 @@ body.light, .light {
 
 .light .global-navbar {
   background: #ffffff;
-  color: #1976d2;
-  box-shadow: 0 4px 16px 0 rgba(30,40,60,0.08), 0 1.5px 0 0 #e3eaf5;
+  color: #e53935;
+  box-shadow: 0 4px 16px 0 rgba(30,40,60,0.08), 0 1.5px 0 0 #ffebee;
 }
 .light .global-navbar-title {
-  color: #1976d2;
+  color: #e53935;
 }
 .light .darkmode-toggle-btn {
-  color: #1976d2;
+  color: #e53935;
   background: none;
 }
 .light .darkmode-toggle-btn:hover {
-  color: #004ba0;
+  color: #b71c1c;
 }
 
 .light .app-title {
-  color: #1976d2;
+  color: #e53935;
 }
 .light .app-container {
   background: #fff;
@@ -585,17 +587,17 @@ body.light, .light {
 .light .search-input {
   background: #fff;
   color: #222;
-  border: 1.5px solid #b6d0ff;
+  border: 1.5px solid #ccc;
 }
 .light .search-input:focus {
-  border-color: #1976d2;
+  border-color: #e53935;
 }
 .light .search-button {
   background: none;
-  color: #1976d2;
+  color: #e53935;
 }
 .light .search-button:disabled svg {
-  stroke: #b6d0ff;
+  stroke: #ff8a80;
 }
 
 .light .channel-search-result-item {
@@ -603,11 +605,11 @@ body.light, .light {
   border: 1.5px solid #e3eaf5;
 }
 .light .channel-search-result-item.selected {
-  border: 2px solid #1976d2;
-  background: #e3f2fd;
+  border: 2px solid #e53935;
+  background: #ffebee;
 }
 .light .channel-search-result-item:hover {
-  background: #e3f2fd;
+  background: #ffebee;
 }
 .light .channel-search-result-name {
   color: black;
@@ -616,7 +618,7 @@ body.light, .light {
   color: #444;
 }
 .light .channel-search-result-link {
-  color: #1976d2;
+  color: #5457ff;
 }
 
 /* body.light .change-channel-button, .light .change-channel-button {
@@ -628,7 +630,7 @@ body.light .change-channel-button:hover, .light .change-channel-button:hover {
 } */
 
 .light .change-channel-button:hover {
-  background: #004ba0;
+  background: #b71c1c;
 }
 
 .light .search-results-title {
@@ -642,45 +644,45 @@ body.light .change-channel-button:hover, .light .change-channel-button:hover {
 }
 
 .light .video-title:hover {
-  color: #1976d2;
+  color: #e53935;
 }
 
 .light .video-date {
   color: #6d6d6d;
 }
 .light .trim-script-snippet {
-  background: #e3f2fd;
-  border-left: 4px solid #1976d2;
-  color: #1976d2;
+  background: #fff5f5;
+  border-left: 4px solid #e53935;
+  color: #b71c1c;
 }
 .light .trim-script-icon {
-  color: #1976d2;
+  color: #e53935;
 }
 .light .trim-script-text {
-  color: #004ba0;
+  color: #ff1744;
 }
 .light .continue-search-button {
-  background: #1976d2;
+  background: #e53935;
   color: #fff;
 }
 .light .continue-search-button:hover {
-  background: #004ba0;
+  background: #b71c1c;
 }
 .light .continue-search-button:disabled {
-  background: #b6d0ff;
+  background: #ff8a80;
   color: #fff;
 }
 .light .search-completed {
-  background: #e3f2fd;
-  color: #1976d2;
+  background: #ffebee;
+  color: #e53935;
 }
 .light .loading-spinner {
-  border: 3px solid #e3eaf5;
-  border-top: 3px solid #1976d2;
+  border: 3px solid #ffebee;
+  border-top: 3px solid #e53935;
 }
 .light .loading-text {
-  color: #1976d2;
+  color: #e53935;
 }
 .light .searching-more {
-  color: #1976d2;
+  color: #e53935;
 }
