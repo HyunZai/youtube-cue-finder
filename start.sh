@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# YouTube Cue 선택적 서비스 시작 스크립트
+# YouTube Cue Finder 선택적 서비스 시작 스크립트
 # 사용법: ./start.sh [react] [node] [python] [all]
 
 # 색상 정의
@@ -20,7 +20,7 @@ CLIENT_PID=""
 
 # 함수: 사용법 출력
 show_usage() {
-    echo -e "${BLUE}YouTube Cue 서비스 시작 스크립트${NC}"
+    echo -e "${BLUE}YouTube Cue Finder 서비스 시작 스크립트${NC}"
     echo ""
     echo "사용법:"
     echo "  ./start.sh [react] [node] [python] [all]"
@@ -96,7 +96,7 @@ for arg in "$@"; do
     esac
 done
 
-echo -e "${GREEN}🚀 YouTube Cue 서비스 시작${NC}"
+echo -e "${GREEN}🚀 YouTube Cue Finder 서비스 시작${NC}"
 echo ""
 
 # Python API 시작
