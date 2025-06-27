@@ -1,4 +1,4 @@
-# YouTube Cue
+# YouTube Cue Finder
 
 YouTube 채널의 모든 영상에서 특정 단어나 구문이 포함된 지점을 찾아주는 웹 애플리케이션입니다.
 
@@ -47,8 +47,8 @@ graph TD;
 
 ### 2. 프로젝트 클론 Clone the Project
 ```bash
-git clone https://github.com/your-username/youtube-cue.git
-cd youtube-cue
+git clone https://github.com/your-username/youtube-cue-finder.git
+cd youtube-cue-finder
 ```
 
 ### 3. 환경 변수 설정 Set Environment Variables
