@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useContext } from 'react'
 import './App.css'
 import axios from 'axios'
 import ChannelSearch from './components/ChannelSearch'
@@ -9,28 +9,28 @@ import LoadingSpinner from './components/LoadingSpinner'
 import Swal from 'sweetalert2'
 import DarkModeIcon from '@mui/icons-material/DarkMode'
 import LightModeIcon from '@mui/icons-material/LightMode'
-import { useContext } from 'react'
 import { AppContext } from './context/AppContext'
 import logoImage from './assets/logo.png'
 
 function App() {
-  const { theme, setTheme } = useContext(AppContext)
-  // State for channel input and type
-  const [channelInput, setChannelInput] = useState('')
-  const [channelInfo, setChannelInfo] = useState(null) // For channel info if found by URL
-  const [searchMode, setSearchMode] = useState('') // 'url' or 'name'
-  const [searchedChannel, setSearchedChannel] = useState([]) // for name search results
-  const [currentSearchChannelId, setCurrentSearchChannelId] = useState(null); // 현재 검색 중인 채널 ID
-  
-  const [cueWord, setCueWord] = useState('') //검색 키워드
-  const [searchedVideos, setSearchedVideos] = useState([]) // 검색결과 리스트
-  const [isSearching, setIsSearching] = useState(false) // 검색 중인지 여부
-  
-  const [nextPageToken, setNextPageToken] = useState(null); // 다음 페이지 토큰
-  const [hasMoreVideos, setHasMoreVideos] = useState(true); // 더 검색할 영상이 있는지 여부
-  const [currentBatchCompleted, setCurrentBatchCompleted] = useState(false); // 현재 50개 영상 검색 완료 여부
-  const abortControllerRef = useRef(null); // 검색 중단용 AbortController
-  //const isSearchingRef = useRef(false);
+  const {
+    theme, setTheme,
+    channelInput, setChannelInput,
+    channelInfo, setChannelInfo,
+    searchMode, setSearchMode,
+    searchedChannel, setSearchedChannel,
+    currentSearchChannelId, setCurrentSearchChannelId,
+    cueWord, setCueWord,
+    searchedVideos, setSearchedVideos,
+    isSearching, setIsSearching,
+    nextPageToken, setNextPageToken,
+    hasMoreVideos, setHasMoreVideos,
+    currentBatchCompleted, setCurrentBatchCompleted,
+    abortControllerRef,
+    hasKoreanInHandle,
+    extractKoreanFromHandle,
+    resetAllStates,
+  } = useContext(AppContext);
 
   // 페이지 새로고침이나 브라우저 닫기 시 검색 상태 초기화
   useEffect(() => {
@@ -47,40 +47,13 @@ function App() {
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
-  }, [isSearching]); // 의존성 배열을 빈 배열로 변경
+  }, [isSearching]);
 
   // 테마 변경 시 body class도 변경
   useEffect(() => {
     document.body.classList.remove('dark', 'light');
     document.body.classList.add(theme);
   }, [theme]);
-
-  // 한글이 포함된 @핸들 URL인지 확인하는 함수
-  const hasKoreanInHandle = (input) => {
-    const handleMatch = input.match(/youtube\.com\/(?:@|user\/)([^/?]+)/u);
-    if (handleMatch) {
-      const handle = handleMatch[1];
-      // URL 디코딩 후 한글 정규식: 가-힣 (한글 유니코드 범위)
-      const decodedHandle = decodeURIComponent(handle);
-      return /[가-힣]/.test(decodedHandle);
-    }
-    return false;
-  };
-
-  // 한글이 포함된 URL에서 한글 부분을 추출하는 함수
-  const extractKoreanFromHandle = (input) => {
-    const handleMatch = input.match(/youtube\.com\/(?:@|user\/)([^/?]+)/u);
-    if (handleMatch) {
-      const handle = handleMatch[1];
-      const decodedHandle = decodeURIComponent(handle);
-      // 한글 부분만 추출 (연속된 한글 문자들)
-      const koreanMatch = decodedHandle.match(/[가-힣]+/g);
-      if (koreanMatch && koreanMatch.length > 0) {
-        return koreanMatch.join(' '); // 여러 한글 단어가 있으면 공백으로 연결
-      }
-    }
-    return null;
-  };
 
   // Handle channel input submit
   const handleChannelSearch = async () => {
@@ -310,16 +283,7 @@ function App() {
       });
       if (!result.isConfirmed) return;
     }
-    setChannelInfo(null);
-    setChannelInput('');
-    setSearchMode('');
-    setSearchedVideos([]);
-    setIsSearching(false);
-    setCueWord('');
-    setCurrentSearchChannelId(null);
-    setNextPageToken(null);
-    setHasMoreVideos(true);
-    setCurrentBatchCompleted(false);
+    resetAllStates();
   };
 
   const handleToggleTheme = () => {
