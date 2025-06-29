@@ -19,7 +19,7 @@ function App() {
   const [channelInput, setChannelInput] = useState('')
   const [channelInfo, setChannelInfo] = useState(null) // For channel info if found by URL
   const [searchMode, setSearchMode] = useState('') // 'url' or 'name'
-  const [channelSearchResults, setChannelSearchResults] = useState([]) // for name search results
+  const [searchedChannel, setSearchedChannel] = useState([]) // for name search results
   const [currentSearchChannelId, setCurrentSearchChannelId] = useState(null); // 현재 검색 중인 채널 ID
   
   const [cueWord, setCueWord] = useState('') //검색 키워드
@@ -67,6 +67,21 @@ function App() {
     return false;
   };
 
+  // 한글이 포함된 URL에서 한글 부분을 추출하는 함수
+  const extractKoreanFromHandle = (input) => {
+    const handleMatch = input.match(/youtube\.com\/(?:@|user\/)([^/?]+)/u);
+    if (handleMatch) {
+      const handle = handleMatch[1];
+      const decodedHandle = decodeURIComponent(handle);
+      // 한글 부분만 추출 (연속된 한글 문자들)
+      const koreanMatch = decodedHandle.match(/[가-힣]+/g);
+      if (koreanMatch && koreanMatch.length > 0) {
+        return koreanMatch.join(' '); // 여러 한글 단어가 있으면 공백으로 연결
+      }
+    }
+    return null;
+  };
+
   // Handle channel input submit
   const handleChannelSearch = async () => {
     if (!channelInput) {
@@ -79,8 +94,26 @@ function App() {
       });
       return;
     }
+
     // 한글이 포함된 @핸들 URL인지 확인
     if (hasKoreanInHandle(channelInput)) {
+      // 한글 부분을 추출하여 채널명으로 검색
+      const koreanChannelName = extractKoreanFromHandle(channelInput);
+      if (koreanChannelName) {
+        try {
+          const res = await axios.get('/api/channel-search', { params: { query: koreanChannelName } });
+          if (res.data.results && res.data.results.length > 0) {
+            setSearchedChannel(res.data.results);
+            setSearchMode('name');
+            setChannelInfo(null);
+            return;
+          }
+        } catch (error) {
+          console.error('한글 채널명 검색 중 오류:', error);
+        }
+      }
+      
+      // 한글 추출 실패 또는 검색 결과가 없는 경우
       Swal.fire({
         icon: 'error',
         title: '검색 불가',
@@ -96,15 +129,15 @@ function App() {
       if (res.data.channelInfo) {
         setChannelInfo(res.data.channelInfo);
         setSearchMode('url');
-        setChannelSearchResults([]);
+        setSearchedChannel([]);
       } else if (res.data.results) {
-        setChannelSearchResults(res.data.results);
+        setSearchedChannel(res.data.results);
         setSearchMode('name');
         setChannelInfo(null);
       }
     } catch {
       setChannelInfo(null);
-      setChannelSearchResults([]);
+      setSearchedChannel([]);
       Swal.fire({
         icon: 'error',
         title: '채널 검색 오류',
@@ -243,7 +276,7 @@ function App() {
   // 채널명 검색 결과에서 채널을 선택하면 channelInfo로 설정
   const handleSelectChannel = (ch) => {
     setChannelInfo(ch);
-    setChannelSearchResults([]);
+    setSearchedChannel([]);
     setSearchMode('url'); // 선택 시 url 모드로 전환(정보만 보여줌)
   };
 
@@ -319,7 +352,7 @@ function App() {
             setChannelInput={setChannelInput}
             handleChannelSearch={handleChannelSearch}
             searchMode={searchMode}
-            channelSearchResults={channelSearchResults}
+            searchedChannel={searchedChannel}
             handleSelectChannel={handleSelectChannel}
           />
         ) : (
@@ -351,6 +384,9 @@ function App() {
             handleCueSearch={handleCueSearch}
           />
         )}
+      </div>
+      <div className="global-footer">
+        © 2025 YouTube Cue Finder
       </div>
     </>
   );

@@ -107,6 +107,7 @@
 
 .change-channel-button {
   background: #ff3333;
+  color: white;
   border-radius: 6px;
   padding: 6px 12px;
   cursor: pointer;
@@ -134,7 +135,7 @@
   max-width: 800px;
   margin: 100px auto;
   padding: 24px;
-  padding-top: 10px;
+  padding-top: 20px;
   border-radius: 20px;
 }
 
@@ -145,6 +146,7 @@
 
 /* Channel search wrapper styles */
 .channel-search-wrapper {
+  margin-top: 20px;
   margin-bottom: 50px;
 }
 
@@ -406,7 +408,6 @@
   font-size: 1.7rem;
   cursor: pointer;
   background: none;
-  margin-right: 30px;
 }
 
 .darkmode-toggle-btn:hover {
@@ -685,4 +686,33 @@ body.light .change-channel-button:hover, .light .change-channel-button:hover {
 }
 .light .searching-more {
   color: #e53935;
+}
+
+/* ===== Global Footer ===== */
+.global-footer {
+  width: 100%;
+  height: 48px;
+  background: #fff;
+  color: #e53935;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 100;
+  box-shadow: 0 -2px 8px 0 rgba(30,40,60,0.08), 0 -1.5px 0 0 #ffebee;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+.dark .global-footer {
+  background: #232323;
+  color: #ff5252;
+  box-shadow: 0 -2px 8px 0 rgba(30,40,60,0.18), 0 -1.5px 0 0 #181A1B;
+}
+.light .global-footer {
+  background: #fff;
+  color: #e53935;
+  box-shadow: 0 -2px 8px 0 rgba(30,40,60,0.08), 0 -1.5px 0 0 #ffebee;
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 
-function ChannelSearch({ channelInput, setChannelInput, handleChannelSearch, searchMode, channelSearchResults, handleSelectChannel }) {
+function ChannelSearch({ channelInput, setChannelInput, handleChannelSearch, searchMode, searchedChannel, handleSelectChannel }) {
   return (
     <div className="channel-search-wrapper">
       <h3>유튜브 채널명이나 채널 URL을 입력하세요.</h3>
@@ -28,11 +28,11 @@ function ChannelSearch({ channelInput, setChannelInput, handleChannelSearch, sea
         </div>
       </div>
       {/* 채널명으로 검색했을 때 결과 표시 */}
-      {searchMode === 'name' && channelSearchResults.length > 0 && (
+      {searchMode === 'name' && searchedChannel.length > 0 && (
         <div className="channel-search-results">
           <p>영상을 검색할 채널을 선택하세요.</p>
           <ul className="channel-search-results-list">
-            {channelSearchResults.map((ch, idx) => (
+            {searchedChannel.map((ch, idx) => (
               <li key={idx} className="channel-search-result-item" onClick={() => handleSelectChannel(ch)}>
                 <img src={ch.thumbnail} alt="채널 썸네일" className="channel-search-result-thumbnail" />
                 <div className="channel-search-result-info">
