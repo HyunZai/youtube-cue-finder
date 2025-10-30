@@ -39,9 +39,9 @@ def get_transcript(video_id):
         # transcript_list = YouTubeTranscriptApi.get_transcript(video_id, languages=['ko', 'en'])
         ytt_api = YouTubeTranscriptApi(
             proxy_config=GenericProxyConfig(
-                http_url="http://kyfrldhw:hgfac9bq98t0@107.172.163.27:6543",
-                https_url="http://kyfrldhw:hgfac9bq98t0@107.172.163.27:6543"
-                #filter_ip_locations=["ko", "jp"], # 특정 국가의 IP주소의 프록시만 사용할 때 사용
+                http_url="http://username:password@ip:port",
+                https_url="http://username:password@ip:port"
+                #filter_ip_locations=["ko", "jp"], # 특정 국가의 IP주소의 프록시만 사용하고 싶을 때 사용
             )
         )
         fetched_transcript = ytt_api.fetch(video_id, languages=['ko', 'en'])
