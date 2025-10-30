@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
 from youtube_transcript_api import YouTubeTranscriptApi
+from youtube_transcript_api.proxies import GenericProxyConfig
 from flask_cors import CORS
 import logging
 from datetime import datetime
@@ -31,12 +32,27 @@ def get_transcript(video_id):
     try:
         # 순번 정보 가져오기 (기본값: unknown)
         order = request.args.get('order', 'unknown')
-        
+
+        # https://github.com/jdepoix/youtube-transcript-api
+        # 구글측에서 프록시 차단해서 작동안함 위 git링크 들어가면 대처하는 방법을 써놨는데 돈듦..
         # 한국어 또는 영어 자막을 우선으로 가져오기
-        transcript_list = YouTubeTranscriptApi.get_transcript(video_id, languages=['ko', 'en'])
+        # transcript_list = YouTubeTranscriptApi.get_transcript(video_id, languages=['ko', 'en'])
+        ytt_api = YouTubeTranscriptApi(
+            proxy_config=GenericProxyConfig(
+                http_url="http://kyfrldhw:hgfac9bq98t0@107.172.163.27:6543",
+                https_url="http://kyfrldhw:hgfac9bq98t0@107.172.163.27:6543"
+                #filter_ip_locations=["ko", "jp"], # 특정 국가의 IP주소의 프록시만 사용할 때 사용
+            )
+        )
+        fetched_transcript = ytt_api.fetch(video_id, languages=['ko', 'en'])
+
+        # is iterable
+        for snippet in fetched_transcript:
+            print(snippet.text)
+
         
         # 전체 자막 텍스트를 하나의 문자열로 합치기
-        full_transcript = " ".join([item['text'] for item in transcript_list])
+        full_transcript = " ".join([item['text'] for item in fetched_transcript])
         
         logging.info(f"✅ Transcript success: {order} - {video_id}")
         
